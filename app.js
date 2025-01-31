@@ -38,8 +38,6 @@ async function sendCommand(command) {
     }
 }
 
-sendCommand("LED_ON");
-
 const Button = document.getElementById('button');
 const LockButton = document.getElementById('lock-button');
 const UnlockButton = document.getElementById('unlock-button');
@@ -132,3 +130,5 @@ locationSelect.addEventListener('change', function(){
         firstUnlockMessage.style.display = 'none';
     };
 });
+
+connectToArduino();
