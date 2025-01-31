@@ -1,18 +1,16 @@
 let port; // This will hold the serial port object
 
-// Function to connect to the Arduino via Web Serial API
 async function connectToArduino() {
     try {
-        console.log("Requesting port...");
-        port = await navigator.serial.requestPort(); // Request a serial port
-        await port.open({ baudRate: 9600 }); // Open the serial connection
-        console.log('Connected to Arduino');
+      console.log("Requesting port...");
+      port = await navigator.serial.requestPort(); // Request a serial port
+      await port.open({ baudRate: 9600 }); // Open the serial connection
+      console.log('Connected to Arduino');
     } catch (error) {
-        console.error('Failed to connect to Arduino:', error);
+      console.error('Failed to connect to Arduino:', error);
     }
 }
-
-    // Function to send a command to the Arduino over Serial
+  
 async function sendCommand(command) {
     if (port && port.writable) {
         console.log(`Sending command: ${command}`);
@@ -21,8 +19,11 @@ async function sendCommand(command) {
         const commandBytes = encoder.encode(command + '\n'); // Append newline to the command
         await writer.write(commandBytes); // Send the command
         writer.releaseLock(); // Release the writer after sending
+    } else {
+        console.error("Serial port not connected or writable.");
     }
 }
+  
 
 const Button = document.getElementById('button');
 const LockButton = document.getElementById('lock-button');
@@ -55,6 +56,7 @@ firstLockButton.addEventListener('click', function(){
     firstLockMessage.style.display = 'none';
     firstUnlockButton.style.display = 'flex';
     firstUnlockMessage.style.display = 'flex';
+    sendCommand("LED_OFF")
 });
 
 firstUnlockButton.addEventListener('click', function(){
@@ -62,6 +64,7 @@ firstUnlockButton.addEventListener('click', function(){
     firstLockMessage.style.display = 'flex';
     firstUnlockButton.style.display = 'none';
     firstUnlockMessage.style.display = 'none';
+    sendCommand("LED_ON")
 });
 
 const locationSelect = document.getElementById('devices');
