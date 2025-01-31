@@ -8,7 +8,7 @@
     position: absolute;
     background-size: cover;
     background-repeat: no-repeat;
-    background-image: url('/static/images/train.jpeg');
+    background-image: url('train.jpeg');
 }
 
 * {
