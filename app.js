@@ -10,6 +10,20 @@ async function connectToArduino() {
       console.error('Failed to connect to Arduino:', error);
     }
 }
+
+async function readFromArduino() {
+    const reader = port.readable.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+    
+    while (!done) {
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      if (value) {
+        console.log("Arduino says: " + decoder.decode(value));
+      }
+    }
+}
   
 async function sendCommand(command) {
     if (port && port.writable) {
