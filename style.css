@@ -1,0 +1,118 @@
+.background-image{
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100vh;
+    filter: blur(5px);
+    position: absolute;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url('/static/images/train.jpeg');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+nav{
+    padding: 0px;
+    font-size: 30px;
+    margin: 40px 20px 40px 20px;
+    text-align: center;
+    border: 1px solid white;
+    border-radius: 20px;
+    background-color: rgba(222, 134, 54, 50%);
+    box-shadow: 2px 10px 10px #de8636 ;
+}
+
+#devices{
+    background-color: transparent;
+    font-weight: bold;
+    font-family: "Times New Roman", Times, serif;
+    color: white; 
+    font-size: 40px; 
+    text-align: center; 
+    text-align-last: center; 
+    border: 1px solid transparent; 
+    border-radius: 5px; 
+    padding: 5px; 
+
+}
+
+#devices option{
+    font-size: 16px;
+    text-align: center; 
+    line-height: 50px; 
+    height: 50px;   
+}
+
+section{
+    text-align: center;
+}
+
+#button, #hc-button{
+    margin: 80px 60px 20px 60px;
+}
+
+#lock-button, #unlock-button, #hc-lock-button, #hc-unlock-button{
+    display: flex;
+    width: 250px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #de8636;
+    color: white;
+    border: transparent;
+    border-radius: 50%;
+    align-items: center;
+    cursor: pointer;
+}
+
+#lock-message, #hc-lock-message{
+    color: white;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 60px;
+    text-shadow: 2px 5px 10px #de8636;
+    text-align: center;
+}
+
+#unlock-message, #hc-unlock-message{
+    color: white;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 50px;
+    text-shadow: 2px 5px 10px #de8636;
+}
+
+.user-icon, .lock-icon, .setting-icon{
+    margin: 20px;
+    padding: 20px;
+}
+
+
+footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    border: 1px solid white;
+    background-color: rgb(222, 134, 54);
+    left: 0;
+    bottom: 0;
+    padding: 5px;
+    margin: 0;
+    width: 100%;
+    font-size: 15px;
+    margin-top: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 6px 5px 5px grey;
+    position: fixed;
+
+}

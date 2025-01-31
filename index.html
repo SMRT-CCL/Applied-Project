@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <section class="background-image"></section>
+
+    <nav>
+        <select id="devices">
+            <option value="default-device" style="color: #de8636;">Select A Device</option>
+            <option value="device-1" style="color: #de8636;">HC-05</option>
+        </select>
+    </nav>
+
+    <section id="default-page">
+        <div id="button">
+            <div id="lock-button" >
+                <i class="material-icons" style="font-size: 150px;">&#xe899;</i>
+            </div>
+    
+            <div id="unlock-button" style="display: none;">
+                <i class="material-icons" style="font-size: 150px;">&#xe898;</i>
+            </div>
+        </div>
+    
+        <div id="lock-message">LOCKED</div>
+        <div id="unlock-message" style="display: none;">UNLOCKED</div>
+    </section>
+    
+    <section id="device-1-page" style="display: none;">
+        <div id="hc-button">
+            <div id="hc-lock-button" >
+                <i class="material-icons" style="font-size: 150px;">&#xe899;</i>
+            </div>
+    
+            <div id="hc-unlock-button" style="display: none;">
+                <i class="material-icons" style="font-size: 150px;">&#xe898;</i>
+            </div>
+        </div>
+    
+        <div id="hc-lock-message">LOCKED</div>
+        <div id="hc-unlock-message" style="display: none;">UNLOCKED</div>
+    </section>
+
+    <footer>
+        <div id="user-icon">
+            <i class="material-icons" style="font-size: 40px; color: white; cursor: not-allowed;">&#xe7fb;</i>
+        </div>
+
+        <div id="lock-icon">
+            <i class="material-icons" style="font-size: 40px; color: white; cursor: not-allowed;">&#xe897;</i>
+        </div>
+
+        <div id="setting-icon">
+            <i class="material-icons" style="font-size: 40px; color: white; cursor: not-allowed;">&#xe8b8;</i>
+        </div>
+    </footer>
+    <script type="text/javascript" src="/static/js/app.js"></script>
+    <script>
+        let bluetoothDevice;
+        let bluetoothCharacteristic;
+        const ledOnButton = document.getElementById('ledOn');
+        const ledOffButton = document.getElementById('ledOff');
+
+        // Connect to the Bluetooth device (HC-05)
+        async function connectBluetooth() {
+        try {
+            console.log("Requesting Bluetooth device...");
+            bluetoothDevice = await navigator.bluetooth.requestDevice({
+            filters: [{ namePrefix: 'HC-05' }], // Look for devices named HC-05
+            optionalServices: ['battery_service'] // You can add other services as needed
+            });
+
+            console.log("Connecting to Bluetooth device...");
+            const server = await bluetoothDevice.gatt.connect();
+            const service = await server.getPrimaryService('battery_service'); // Can be any service
+            bluetoothCharacteristic = await service.getCharacteristic('battery_level'); // This could be a custom characteristic
+            console.log("Connected to Bluetooth device!");
+        } catch (error) {
+            console.log("Error connecting to Bluetooth device: ", error);
+        }
+        }
+
+        // Send data to the Bluetooth device (HC-05)
+        async function sendCommand(command) {
+        if (!bluetoothDevice) {
+            alert("No Bluetooth device connected");
+            return;
+        }
+
+        try {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(command); // Encode the command as bytes
+            await bluetoothCharacteristic.writeValue(data); // Send the command to the device
+            console.log(`Sent command: ${command}`);
+        } catch (error) {
+            console.log("Error sending command: ", error);
+        }
+        }
+
+        // Event listeners for buttons
+        ledOnButton.addEventListener('click', () => {
+            sendCommand('LED_ON');
+        });
+
+        ledOffButton.addEventListener('click', () => {
+            sendCommand('LED_OFF');
+        });
+
+        // Connect to Bluetooth device when the page loads
+        window.onload = connectBluetooth;
+    </script>
+</body>
+</html>
