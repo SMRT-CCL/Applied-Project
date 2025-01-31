@@ -1,41 +1,29 @@
-let port; // This will hold the serial port object
+let port; // Declare a variable for the serial port object
 
+// Function to request and connect to the serial port
 async function connectToArduino() {
-    try {
-      console.log("Requesting port...");
-      port = await navigator.serial.requestPort(); // Request a serial port
-      await port.open({ baudRate: 9600 }); // Open the serial connection
-      console.log('Connected to Arduino');
-    } catch (error) {
-      console.error('Failed to connect to Arduino:', error);
-    }
+  try {
+    console.log("Requesting port...");
+    port = await navigator.serial.requestPort(); // Ask the user to select a port
+    await port.open({ baudRate: 9600 }); // Open the selected port at 9600 baud rate
+    console.log('Connected to Arduino');
+  } catch (error) {
+    console.error('Failed to connect to Arduino:', error); // If the connection fails, log an error
+  }
 }
 
-async function readFromArduino() {
-    const reader = port.readable.getReader();
-    const decoder = new TextDecoder();
-    let done = false;
-    
-    while (!done) {
-      const { value, done: doneReading } = await reader.read();
-      done = doneReading;
-      if (value) {
-        console.log("Arduino says: " + decoder.decode(value));
-      }
-    }
-}
-  
+// Function to send a command to Arduino over Serial
 async function sendCommand(command) {
-    if (port && port.writable) {
-        console.log(`Sending command: ${command}`);
-        const writer = port.writable.getWriter();
-        const encoder = new TextEncoder();
-        const commandBytes = encoder.encode(command + '\n'); // Append newline to the command
-        await writer.write(commandBytes); // Send the command
-        writer.releaseLock(); // Release the writer after sending
-    } else {
-        console.error("Serial port not connected or writable.");
-    }
+  if (port && port.writable) {
+    console.log(`Sending command: ${command}`); // Log the command being sent
+    const writer = port.writable.getWriter(); // Get the writer to send data
+    const encoder = new TextEncoder(); // Text encoder to convert the string to bytes
+    const commandBytes = encoder.encode(command + '\n'); // Convert the command to bytes and append a newline
+    await writer.write(commandBytes); // Write the command to the serial port
+    writer.releaseLock(); // Release the lock on the writer after sending
+  } else {
+    console.error("Serial port not connected or writable.");
+  }
 }
 
 const Button = document.getElementById('button');
@@ -131,4 +119,6 @@ locationSelect.addEventListener('change', function(){
     };
 });
 
-connectToArduino();
+window.onload = () => {
+    connectToArduino();
+};
