@@ -90,3 +90,29 @@ locationSelect.addEventListener('change', function(){
         firstUnlockMessage.style.display = 'none';
     };
 });
+
+let port; // This will hold the serial port object
+
+// Function to connect to the Arduino via Web Serial API
+async function connectToArduino() {
+try {
+    port = await navigator.serial.requestPort(); // Request a serial port
+    await port.open({ baudRate: 9600 }); // Open the serial connection
+    console.log('Connected to Arduino');
+    firstLockButton.disabled = false;
+    firstUnlockButton.disabled = false;
+    } catch (error) {
+        console.error('Failed to connect to Arduino:', error);
+    }
+}
+
+// Function to send a command to the Arduino over USB
+async function sendCommand(command) {
+    if (port && port.writable) {
+        const writer = port.writable.getWriter();
+        const encoder = new TextEncoder();
+        const commandBytes = encoder.encode(command + '\n'); // Append newline to the command
+        await writer.write(commandBytes); // Send the command
+        writer.releaseLock(); // Release the writer after sending
+    }
+}
