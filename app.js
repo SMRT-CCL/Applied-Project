@@ -37,7 +37,8 @@ async function sendCommand(command) {
         console.error("Serial port not connected or writable.");
     }
 }
-  
+
+sendCommand("LED_ON");
 
 const Button = document.getElementById('button');
 const LockButton = document.getElementById('lock-button');
