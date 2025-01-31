@@ -63,57 +63,55 @@
     <script type="text/javascript" src="app.js"></script>
     <script>
         let bluetoothDevice;
-        let bluetoothCharacteristic;
-        const ledOnButton = document.getElementById('ledOn');
-        const ledOffButton = document.getElementById('ledOff');
+    let bluetoothCharacteristic;
 
-        // Connect to the Bluetooth device (HC-05)
-        async function connectBluetooth() {
-        try {
-            console.log("Requesting Bluetooth device...");
-            bluetoothDevice = await navigator.bluetooth.requestDevice({
-            filters: [{ namePrefix: 'HC-05' }], // Look for devices named HC-05
-            optionalServices: ['battery_service'] // You can add other services as needed
-            });
+    // Function to connect to Bluetooth device
+    async function connectBluetooth() {
+      try {
+        console.log("Requesting Bluetooth device...");
+        bluetoothDevice = await navigator.bluetooth.requestDevice({
+          filters: [{ namePrefix: 'HC-05' }],
+          optionalServices: ['battery_service'] // Replace with the service you're using
+        });
 
-            console.log("Connecting to Bluetooth device...");
-            const server = await bluetoothDevice.gatt.connect();
-            const service = await server.getPrimaryService('battery_service'); // Can be any service
-            bluetoothCharacteristic = await service.getCharacteristic('battery_level'); // This could be a custom characteristic
-            console.log("Connected to Bluetooth device!");
-        } catch (error) {
+        console.log("Connecting to Bluetooth device...");
+        const server = await bluetoothDevice.gatt.connect(); // Try to connect to GATT server
+        console.log("Connected to Bluetooth device!");
+
+        // Log device and server to confirm successful connection
+        console.log(bluetoothDevice);  // Log the device details
+        console.log(server);           // Log the server details
+
+        // You can add event listener for disconnections
+        bluetoothDevice.addEventListener('gattserverdisconnected', () => {
+          console.log('Bluetooth device disconnected!');
+        });
+
+        // Here, you would proceed to interact with the device (send/receive data)
+      } catch (error) {
             console.log("Error connecting to Bluetooth device: ", error);
         }
-        }
+    }
 
-        // Send data to the Bluetooth device (HC-05)
-        async function sendCommand(command) {
-        if (!bluetoothDevice) {
-            alert("No Bluetooth device connected");
-            return;
-        }
+    // Function to send command to Bluetooth device
+    async function sendCommand(command) {
+      if (!bluetoothDevice) {
+        alert("No Bluetooth device connected");
+        return;
+      }
 
-        try {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(command); // Encode the command as bytes
-            await bluetoothCharacteristic.writeValue(data); // Send the command to the device
-            console.log(`Sent command: ${command}`);
-        } catch (error) {
-            console.log("Error sending command: ", error);
-        }
-        }
+      try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(command);
+        await bluetoothCharacteristic.writeValue(data);  // Send the command
+        console.log(`Sent command: ${command}`);
+      } catch (error) {
+        console.log("Error sending command: ", error);
+      }
+    }
 
-        // Event listeners for buttons
-        ledOnButton.addEventListener('click', () => {
-            sendCommand('LED_ON');
-        });
-
-        ledOffButton.addEventListener('click', () => {
-            sendCommand('LED_OFF');
-        });
-
-        // Connect to Bluetooth device when the page loads
-        window.onload = connectBluetooth;
+    // Connect to Bluetooth when the page loads
+    window.onload = connectBluetooth;
     </script>
 </body>
 </html>

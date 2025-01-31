@@ -19,6 +19,7 @@ LockButton.addEventListener('click', function(){
     LockMessage.style.display = 'none';
     UnlockButton.style.display = 'flex';
     UnlockMessage.style.display = 'flex';
+    sendCommand("LED_OFF");
 });
 
 UnlockButton.addEventListener('click', function(){
@@ -26,6 +27,7 @@ UnlockButton.addEventListener('click', function(){
     LockMessage.style.display = 'flex';
     UnlockButton.style.display = 'none';
     UnlockMessage.style.display = 'none';
+    sendCommand("LED_ON");
 });
 
 firstLockButton.addEventListener('click', function(){
