@@ -26,6 +26,13 @@ async function sendCommand(command) {
   }
 }
 
+if ("serial" in navigator) {
+    console.log("Web Serial API is supported!");
+} else {
+    console.log("Web Serial API is not supported in this browser.");
+}
+  
+
 const Button = document.getElementById('button');
 const LockButton = document.getElementById('lock-button');
 const UnlockButton = document.getElementById('unlock-button');
